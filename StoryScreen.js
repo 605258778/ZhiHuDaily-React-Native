@@ -84,6 +84,7 @@ var StoryScreen = React.createClass({
           + this.state.detail.css[0]
           + '" /></head><body>' + this.state.detail.body
           + '</body></html>';
+        debugger;
         return (
           <View style={styles.container}>
             <MyWebView

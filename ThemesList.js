@@ -31,6 +31,7 @@ var ThemesList = React.createClass({
   componentDidMount: function() {
     this.fetchThemes();
   },
+  //获取栏目列表
   fetchThemes: function() {
     repository.getThemes()
       .then((themes) => {
@@ -120,7 +121,7 @@ var ThemesList = React.createClass({
           onHideUnderlay={highlightRowFunc}>
           <View style={styles.themeItem}>
             <Text style={styles.themeName}>
-              {theme.name}
+                {theme.name}
             </Text>
             <Image source={icon} style={styles.themeIndicate}/>
           </View>
@@ -129,7 +130,7 @@ var ThemesList = React.createClass({
     );
   },
   render: function() {
-    return (
+      return (
       <View style={styles.container} {...this.props}>
         <ListView
           ref="themeslistview"

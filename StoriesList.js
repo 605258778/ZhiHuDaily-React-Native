@@ -20,7 +20,7 @@ var ViewPager = require('react-native-viewpager');
 var StoryScreen = require('./StoryScreen');
 
 var LOADING = {};
-var WEEKDAY = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+var WEEKDAY = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', ''];
 var DRAWER_WIDTH_LEFT = 56;
 var toolbarActions = [
   {title: '提醒', icon: require('image!ic_message_white'), show: 'always'},

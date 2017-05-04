@@ -5,18 +5,29 @@ var React = require('react-native');
 var {
   AsyncStorage,
 } = React;
-
+var hostIp = "http://localhost:8080/ggxxpt/";
 var API_COVER_URL = "http://news-at.zhihu.com/api/4/start-image/1080*1776";
-var API_LATEST_URL = 'http://news-at.zhihu.com/api/4/news/latest';
+//var API_LATEST_URL = 'http://news-at.zhihu.com/api/4/news/latest';
+var API_LATEST_URL = hostIp+'api/action/rollpicture?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2';
 var API_HOME_URL = 'http://news.at.zhihu.com/api/4/news/before/';
 var API_THEME_URL = 'http://news-at.zhihu.com/api/4/theme/';
-var API_THEMES_URL = 'http://news-at.zhihu.com/api/4/themes';
+var API_THEMES_URL = hostIp+"api/action/folders?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2";
 
 var KEY_COVER = '@Cover';
-var KEY_THEMES = '@Themes:';
+var KEY_THEMES = '@Themes1:';
 var KEY_HOME_LIST = '@HomeList:';
 var KEY_THEME_LIST = '@ThemeList:';
 var KEY_THEME_TOPDATA = '@ThemeTop:';
+
+///api/action/login?version=1.0.1&p={username:"admin",password:"123"}
+///api/action/logout?version=1.0.1&apiUser=admin&checkSum=YBrs
+///api/action/config?version=1.0.0&apiUser=admin&checkSum=YBrs
+///api/action/folders?version=1.0.1&apiUser=admin&checkSum=YBrs&p={siteId:2}
+///api/action/pageArticleSite?version=1.0.1&apiUser=admin&checkSum=YBrs&pageNo=1&pageSize=20&p={siteId:2}
+///api/action/pageArticle?version=1.0.1&apiUser=admin&checkSum=YBrs&pageNo=1&pageSize=1&p={folderId:2}
+///api/action/article?version=1.0.1&apiUser=admin&checkSum=YBrs&p={articleId:1}
+
+ var API_FOLDERS_URL = hostIp+'api/action/folders?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2';
 
 function parseDateFromYYYYMMdd(str) {
   if (!str) return new Date();
@@ -83,7 +94,7 @@ DataRepository.prototype.updateCover = function() {
     })
     .done();
 }
-
+//获取历史记录
 DataRepository.prototype.fetchStories = function(date?: Date,
   callback?: ?(error: ?Error, result: ?Object) => void
 ) {
@@ -107,16 +118,11 @@ DataRepository.prototype.fetchStories = function(date?: Date,
     Promise.all([localStorage, networking, topData])
       .then((values) => {
         var error, result;
-        result = this._mergeReadState(values[0], values[1]);
-        if (!result) {
-          error = new Error('Load story error');
-        }
-        callback && callback(error, result);
         if (error) {
           reject(error);
         } else {
-          if (values[1] && values[1].top_stories) {
-            result.topData = values[1].top_stories;
+          if (values[1] && values[1].data) {
+            result.topData = values[1].data.topData;
           } else {
             result.topData = values[2];
           }
@@ -126,7 +132,7 @@ DataRepository.prototype.fetchStories = function(date?: Date,
   });
   return merged;
 };
-
+//获取单个模块
 DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: string,
   callback?: ?(error: ?Error, result: ?Object) => void
 ) {
@@ -215,11 +221,12 @@ DataRepository.prototype.saveStories = function(themeList: object, topData: obje
 
   AsyncStorage.multiSet(keyValuePairs, callback);
 };
-
+//获取滚动图片
 DataRepository.prototype.getThemes = function(
   callback?: ?(error: ?Error, result: ?Object) => void
 ) {
-  return this._safeStorage(KEY_THEMES)
+  debugger;
+  return this._safeFetch(API_FOLDERS_URL)
     .then((result) => {
       if (!result) {
         throw new Error('No themes')
@@ -229,8 +236,9 @@ DataRepository.prototype.getThemes = function(
     })
     .catch((error) => {
       console.error(error);
-      return this._safeFetch(API_THEMES_URL)
+      return this._safeFetch(API_FOLDERS_URL)
         .then((themes) => {
+          debugger;
           AsyncStorage.setItem(KEY_THEMES, JSON.stringify(themes));
           return themes;
         });
@@ -248,6 +256,9 @@ DataRepository.prototype.getThemes = function(
       }
       if (responseData.others) {
         themes = themes.concat(responseData.others);
+      }
+      if (responseData.data) {
+          themes = themes.concat(responseData.data.list);
       }
       return themes;
     });

@@ -49,6 +49,7 @@ var SplashScreen = React.createClass({
     ).start();
   },
   render: function() {
+    debugger;
     var img, text;
     if (this.state.cover) {
       img = {uri: this.state.cover.img};

@@ -5,14 +5,14 @@ var React = require('react-native');
 var {
   AsyncStorage,
 } = React;
-var hostIp = "http://localhost:8080/ggxxpt/";
+var hostIp = "http://192.168.1.102:8080/ggxxpt/";
 var API_COVER_URL = "http://news-at.zhihu.com/api/4/start-image/1080*1776";
-//var API_LATEST_URL = 'http://news-at.zhihu.com/api/4/news/latest';
+var API_LATEST_URL1 = 'http://news-at.zhihu.com/api/4/news/latest';
 var API_LATEST_URL = hostIp+'api/action/rollpicture?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2';
 var API_HOME_URL = 'http://news.at.zhihu.com/api/4/news/before/';
 var API_THEME_URL = 'http://news-at.zhihu.com/api/4/theme/';
 var API_THEMES_URL = hostIp+"api/action/folders?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2";
-
+var API_THEMESDETAIL_URL = hostIp+"api/action/pageArticle?version=1.0.1&apiUser=admin&checkSum=YBrs&pageNo=1&folderId=";
 var KEY_COVER = '@Cover';
 var KEY_THEMES = '@Themes1:';
 var KEY_HOME_LIST = '@HomeList:';
@@ -48,7 +48,9 @@ function DataRepository() { // Singleton pattern
 
   DataRepository.instance = this;
 }
-
+DataRepository.prototype.getHostIp = function() {
+    return hostIp;
+};
 DataRepository.prototype._safeStorage = function(key: string) {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem(key, (error, result) => {
@@ -94,43 +96,97 @@ DataRepository.prototype.updateCover = function() {
     })
     .done();
 }
-//获取历史记录
 DataRepository.prototype.fetchStories = function(date?: Date,
   callback?: ?(error: ?Error, result: ?Object) => void
 ) {
-  var reqUrl;
-  var topData = null;
-  if (!date) {
-    date = new Date();
-    reqUrl = API_LATEST_URL;
-    topData = this._safeStorage(KEY_THEME_TOPDATA+ '0');
-  } else {
-    var beforeDate = new Date(date);
-    beforeDate.setDate(date.getDate() + 1);
-    reqUrl = API_HOME_URL + beforeDate.yyyymmdd();
-  }
+    var reqUrl;
+    var topData = null;
+    if (!date) {
+        date = new Date();
+        reqUrl = API_LATEST_URL;
+        topData = this._safeStorage(KEY_THEME_TOPDATA+ '0');
+    } else {
+        var beforeDate = new Date(date);
+        beforeDate.setDate(date.getDate() + 1);
+        reqUrl = API_HOME_URL + beforeDate.yyyymmdd();
+    }
 
-  var localStorage = this._safeStorage(KEY_HOME_LIST + date.yyyymmdd());
+    var localStorage = this._safeStorage(KEY_HOME_LIST + date.yyyymmdd());
 
-  var networking = this._safeFetch(reqUrl);
+    var networking = this._safeFetch(reqUrl);
 
-  var merged = new Promise((resolve, reject) => {
-    Promise.all([localStorage, networking, topData])
-      .then((values) => {
-        var error, result;
-        if (error) {
-          reject(error);
-        } else {
-          if (values[1] && values[1].data) {
-            result.topData = values[1].data.topData;
-          } else {
-            result.topData = values[2];
-          }
-          resolve(result);
-        }
-      });
-  });
-  return merged;
+    var merged = new Promise((resolve, reject) => {
+        Promise.all([localStorage, networking, topData])
+            .then((values) => {
+                var error, result;
+                if(values[1].data){
+                    result = this._mergeReadState(values[0], values[1].data);
+                }else{
+                    result = this._mergeReadState(values[0], values[1]);
+                }
+
+                if (!result) {
+                    error = new Error('Load story error');
+                }
+                callback && callback(error, result);
+                if (error) {
+                    reject(error);
+                } else {
+                    if (values[1] && values[1].data.top_stories) {
+                        result.topData = values[1].data.top_stories;
+                    }else if(values[1] && values[1].top_stories){
+                        result.topData = values[1].top_stories;
+                    } else {
+                        result.topData = values[2];
+                    }
+                    resolve(result);
+                }
+            });
+    });
+    return merged;
+};
+
+DataRepository.prototype.fetchStories1 = function(date?: Date,
+  callback?: ?(error: ?Error, result: ?Object) => void
+) {
+    var reqUrl;
+    var topData = null;
+    if (!date) {
+        date = new Date();
+        reqUrl = API_LATEST_URL;
+        topData = this._safeStorage(KEY_THEME_TOPDATA+ '0');
+    } else {
+        var beforeDate = new Date(date);
+        beforeDate.setDate(date.getDate() + 1);
+        reqUrl = API_HOME_URL + beforeDate.yyyymmdd();
+    }
+
+    var localStorage = this._safeStorage(KEY_HOME_LIST + date.yyyymmdd());
+
+    var networking = this._safeFetch(reqUrl);
+
+    var merged = new Promise((resolve, reject) => {
+        Promise.all([localStorage, networking, topData])
+            .then((values) => {
+                var error, result;
+                result = this._mergeReadState(values[0], values[1]);
+                if (!result) {
+                    error = new Error('Load story error');
+                }
+                callback && callback(error, result);
+                if (error) {
+                    reject(error);
+                } else {
+                    if (values[1] && values[1].data.top_stories) {
+                        result.topData = values[1].data.top_stories;
+                    } else {
+                        result.topData = values[2];
+                    }
+                    resolve(result);
+                }
+            });
+    });
+    return merged;
 };
 //获取单个模块
 DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: string,
@@ -150,7 +206,7 @@ DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: 
   var isRefresh = !lastID;
   var localStorage = isRefresh ? this._safeStorage(KEY_THEME_LIST + themeId) : null;
 
-  var reqUrl = API_THEME_URL + themeId;
+  var reqUrl = API_THEMESDETAIL_URL + themeId;
   var topData = null;
   if (lastID) {
     reqUrl += '/before/' + lastID;
@@ -164,6 +220,9 @@ DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: 
     Promise.all([localStorage, networking, topData])
       .then((values) => {
         var error, result;
+        if(values[1]&& values[1].data){
+            values[1] = values[1].data;
+        }
         result = this._mergeReadState(values[0], values[1]);
         if (!result) {
           error = new Error('Load story by theme error');
@@ -176,7 +235,7 @@ DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: 
           if (values[1] && values[1].background) {
             topDataRet = {};
             topDataRet.description = values[1].description;
-            topDataRet.background = values[1].background;
+            topDataRet.background = hostIp+values[1].background;
             topDataRet.editors = values[1].editors;
           } else {
             topDataRet = values[2];
@@ -225,7 +284,6 @@ DataRepository.prototype.saveStories = function(themeList: object, topData: obje
 DataRepository.prototype.getThemes = function(
   callback?: ?(error: ?Error, result: ?Object) => void
 ) {
-  debugger;
   return this._safeFetch(API_FOLDERS_URL)
     .then((result) => {
       if (!result) {

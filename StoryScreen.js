@@ -94,7 +94,7 @@ var StoryScreen = React.createClass({
             <Animated.View style={[styles.header, {transform: [{translateY}]}]}>
               <Image
                 ref={REF_HEADER}
-                source={{uri: this.state.detail.image}}
+                source={{uri: this.state.detail.image_url}}
                 style={styles.headerImage} >
                 <View style={styles.titleContainer}>
                   <Text style={styles.title}>

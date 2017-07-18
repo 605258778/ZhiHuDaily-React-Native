@@ -101,7 +101,10 @@ var StoriesList = React.createClass({
         var dataSouce;
         var headerDataSource = this.state.headerDataSource;
         if (!isInTheme) {
-          newLastID = responseData.date;
+          var nowDate = new Date();
+          nowDate = nowDate.yyyymmdd();
+          newLastID = responseData.date||nowDate;
+          responseData.stories = responseData.stories.list
           var newDataBlob = {};
           var newSectionIDs = sectionIDs ? sectionIDs.slice() : []
           if (newSectionIDs.indexOf(newLastID) < 0) {
@@ -179,7 +182,7 @@ var StoriesList = React.createClass({
     return (
       <TouchableOpacity style={{flex: 1}} onPress={() => {this.selectStory(story)}}>
         <Image
-          source={{uri: story.image}}
+          source={{uri: DataRepository.instance.getHostIp()+story.image_url}}
           style={styles.headerItem} >
           <View style={styles.headerTitleContainer}>
             <Text style={styles.headerTitle}
@@ -208,11 +211,7 @@ var StoriesList = React.createClass({
 
       return (
         <View style={{flex: 1}}>
-          {this._renderPage({image: topData.background, title: topData.description}, 0)}
-          <View style={styles.editors}>
-            <Text style={styles.editorsLable}>主编:</Text>
-            {editorsAvator}
-          </View>
+          {this._renderPage({image_url: topData.background, title: topData.description}, 0)}
         </View>
       );
     } else {

@@ -222,6 +222,7 @@ DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: 
         var error, result;
         if(values[1]&& values[1].data){
             values[1] = values[1].data;
+            values[0].stories = values[0];
         }
         result = this._mergeReadState(values[0], values[1]);
         if (!result) {

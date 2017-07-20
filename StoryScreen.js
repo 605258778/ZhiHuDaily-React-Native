@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react-native');
+var DataRepository = require('./DataRepository');
 var {
   AppRegistry,
   PixelRatio,
@@ -18,7 +19,7 @@ var {
 var DetailToolbar = require('./DetailToolbar');
 var MyWebView = (Platform.OS === 'ios') ? WebView : require('./WebView');
 
-var BASE_URL = 'http://news.at.zhihu.com/api/4/news/';
+var BASE_URL = DataRepository.instance.getHostIp()+'api/action/article?version=1.0.1&articleId=';
 var REF_HEADER = 'header';
 var PIXELRATIO = PixelRatio.get();
 var HEADER_SIZE = 200;
@@ -50,9 +51,11 @@ var StoryScreen = React.createClass({
         });
       })
       .then((responseData) => {
+          var detailObj = {};
+          detailObj.body = responseData.data.article.content;
         this.setState({
           isLoading: false,
-          detail: responseData,
+          detail: responseData.data.article.content,
         });
       })
       .done();
@@ -63,14 +66,14 @@ var StoryScreen = React.createClass({
     this.state.scrollValue.setValue(scrollY);
   },
   render: function() {
-
+//渲染详情文章
     var toolbar = <DetailToolbar navigator={this.props.navigator} style={styles.toolbar}
       story={this.props.story}/>;
     if (this.state.isLoading) {
       return (
         <View style={[styles.container, styles.center]}>
           <Text>
-            正在加载...
+            正在加载文章...
           </Text>
           {toolbar}
         </View>
@@ -80,11 +83,8 @@ var StoryScreen = React.createClass({
         var translateY = this.state.scrollValue.interpolate({
           inputRange: [0, HEADER_SIZE, HEADER_SIZE + 1], outputRange: [0, HEADER_SIZE, HEADER_SIZE]
         });
-        var html = '<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="'
-          + this.state.detail.css[0]
-          + '" /></head><body>' + this.state.detail.body
+        var html = '<!DOCTYPE html><html><head></head><body>' + this.state.detail.body
           + '</body></html>';
-        debugger;
         return (
           <View style={styles.container}>
             <MyWebView
@@ -98,7 +98,7 @@ var StoryScreen = React.createClass({
                 style={styles.headerImage} >
                 <View style={styles.titleContainer}>
                   <Text style={styles.title}>
-                    {this.props.story.title}
+                    {this.props.story.title}柔柔弱弱若若若
                   </Text>
                 </View>
               </Image>
@@ -110,7 +110,7 @@ var StoryScreen = React.createClass({
         return (
           <View style={[styles.container, styles.center]}>
             <Text>
-              加载失败
+              加载失败试试
             </Text>
             {toolbar}
           </View>

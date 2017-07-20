@@ -31,7 +31,7 @@ var StoryItem = React.createClass({
         source={{uri: this.props.story.images[0]}}
         style={styles.cellImage} />
     }
-
+  //渲染专题标题
     return (
       <View {...this.props}>
         <TouchableElement

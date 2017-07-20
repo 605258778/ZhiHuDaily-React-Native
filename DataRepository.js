@@ -5,7 +5,7 @@ var React = require('react-native');
 var {
   AsyncStorage,
 } = React;
-var hostIp = "http://192.168.1.102:8080/ggxxpt/";
+var hostIp = "http://192.168.43.16:8080/ggxxpt/";//API调用端口
 var API_COVER_URL = "http://news-at.zhihu.com/api/4/start-image/1080*1776";
 var API_LATEST_URL1 = 'http://news-at.zhihu.com/api/4/news/latest';
 var API_LATEST_URL = hostIp+'api/action/rollpicture?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2';
@@ -18,16 +18,7 @@ var KEY_THEMES = '@Themes1:';
 var KEY_HOME_LIST = '@HomeList:';
 var KEY_THEME_LIST = '@ThemeList:';
 var KEY_THEME_TOPDATA = '@ThemeTop:';
-
-///api/action/login?version=1.0.1&p={username:"admin",password:"123"}
-///api/action/logout?version=1.0.1&apiUser=admin&checkSum=YBrs
-///api/action/config?version=1.0.0&apiUser=admin&checkSum=YBrs
-///api/action/folders?version=1.0.1&apiUser=admin&checkSum=YBrs&p={siteId:2}
-///api/action/pageArticleSite?version=1.0.1&apiUser=admin&checkSum=YBrs&pageNo=1&pageSize=20&p={siteId:2}
-///api/action/pageArticle?version=1.0.1&apiUser=admin&checkSum=YBrs&pageNo=1&pageSize=1&p={folderId:2}
-///api/action/article?version=1.0.1&apiUser=admin&checkSum=YBrs&p={articleId:1}
-
- var API_FOLDERS_URL = hostIp+'api/action/folders?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2';
+var API_FOLDERS_URL = hostIp+'api/action/folders?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2';
 
 function parseDateFromYYYYMMdd(str) {
   if (!str) return new Date();
@@ -45,7 +36,6 @@ function DataRepository() { // Singleton pattern
   if (typeof DataRepository.instance === 'object') {
     return DataRepository.instance;
   }
-
   DataRepository.instance = this;
 }
 DataRepository.prototype.getHostIp = function() {
@@ -242,6 +232,7 @@ DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: 
             topDataRet = values[2];
           }
           result.topData = topDataRet;
+          result.background = hostIp+result.background
           resolve(result);
         }
       });

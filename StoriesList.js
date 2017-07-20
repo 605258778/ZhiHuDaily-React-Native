@@ -303,10 +303,10 @@ var StoriesList = React.createClass({
   onRefresh: function() {
     this.onSelectTheme(this.props.theme);
   },
-  render: function() {
+  render: function() {//渲染专题列表
     var content = this.state.dataSource.getRowCount() === 0 ?
       <View style={styles.centerEmpty}>
-        <Text>{this.state.isLoading ? '正在加载...' : '加载失败'}</Text>
+        <Text>{this.state.isLoading ? '正在加载专题...' : '加载专题失败'}</Text>
       </View> :
       <ListView
         ref="listview"

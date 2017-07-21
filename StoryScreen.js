@@ -55,7 +55,7 @@ var StoryScreen = React.createClass({
           detailObj.body = responseData.data.article.content;
         this.setState({
           isLoading: false,
-          detail: responseData.data.article.content,
+          detail: detailObj,
         });
       })
       .done();

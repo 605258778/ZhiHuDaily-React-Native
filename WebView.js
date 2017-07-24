@@ -1,5 +1,5 @@
 'use strict';
-
+//自定义的WebView，引用原生模块，用于显示文章详情
 var React = require('react-native');
 var {
   View,

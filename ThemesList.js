@@ -1,5 +1,5 @@
 'use strict';
-
+//可订阅主题的列表
 var React = require('react-native');
 var {
   AsyncStorage,

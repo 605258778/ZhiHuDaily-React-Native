@@ -1,5 +1,5 @@
 'use strict';
-
+//android应用的主界面
 var React = require('react-native');
 var {
   AsyncStorage,
@@ -30,7 +30,7 @@ var toolbarActions = [
 
 var MainScreen = React.createClass({
   getInitialState: function() {
-    return ({
+    return ({DetailToolbar
       theme: null,
     });
   },

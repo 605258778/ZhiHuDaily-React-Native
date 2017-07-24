@@ -1,11 +1,11 @@
 'use strict';
-
+//数据仓储，提供远程访问和数据缓存功能
 var React = require('react-native');
 
 var {
   AsyncStorage,
 } = React;
-var hostIp = "http://192.168.43.16:8080/ggxxpt/";//API调用端口
+var hostIp = "http://192.168.1.103:8080/ggxxpt/";//API调用端口
 var API_COVER_URL = "http://news-at.zhihu.com/api/4/start-image/1080*1776";
 var API_LATEST_URL1 = 'http://news-at.zhihu.com/api/4/news/latest';
 var API_LATEST_URL = hostIp+'api/action/rollpicture?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2';
@@ -198,7 +198,8 @@ DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: 
 
   var reqUrl = API_THEMESDETAIL_URL + themeId;
   var topData = null;
-  if (lastID) {
+  //if (lastID) {
+  if (false) {
     reqUrl += '/before/' + lastID;
   } else {
     topData = this._safeStorage(KEY_THEME_TOPDATA + themeId);
@@ -232,7 +233,7 @@ DataRepository.prototype.fetchThemeStories = function(themeId: number, lastID?: 
             topDataRet = values[2];
           }
           result.topData = topDataRet;
-          result.background = hostIp+result.background
+          result.background = hostIp+result.background;
           resolve(result);
         }
       });

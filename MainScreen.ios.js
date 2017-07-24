@@ -1,5 +1,5 @@
 'use strict';
-
+//ios应用的主界面
 var React = require('react-native');
 var {
   AsyncStorage,

@@ -1,5 +1,5 @@
 'use strict';
-
+//下拉刷新控件，引用原生模块
 var React = require('react-native');
 var {
   requireNativeComponent,

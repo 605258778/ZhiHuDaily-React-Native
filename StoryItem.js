@@ -1,5 +1,5 @@
 'use strict';
-
+//文章列表组件的子项
 var React = require('react-native');
 
 var {

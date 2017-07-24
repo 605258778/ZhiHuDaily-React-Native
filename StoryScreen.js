@@ -1,5 +1,5 @@
 'use strict';
-
+//文章详情界面
 var React = require('react-native');
 var DataRepository = require('./DataRepository');
 var {
@@ -83,7 +83,7 @@ var StoryScreen = React.createClass({
         var translateY = this.state.scrollValue.interpolate({
           inputRange: [0, HEADER_SIZE, HEADER_SIZE + 1], outputRange: [0, HEADER_SIZE, HEADER_SIZE]
         });
-        var html = '<!DOCTYPE html><html><head></head><body>' + this.state.detail.body
+        var html = '<!DOCTYPE html><html><head><title>这是标题哦</title></head><body>' + this.state.detail.body
           + '</body></html>';
         return (
           <View style={styles.container}>
@@ -98,7 +98,7 @@ var StoryScreen = React.createClass({
                 style={styles.headerImage} >
                 <View style={styles.titleContainer}>
                   <Text style={styles.title}>
-                    {this.props.story.title}柔柔弱弱若若若
+                    {this.props.story.title}
                   </Text>
                 </View>
               </Image>
@@ -110,7 +110,7 @@ var StoryScreen = React.createClass({
         return (
           <View style={[styles.container, styles.center]}>
             <Text>
-              加载失败试试
+              加载失败
             </Text>
             {toolbar}
           </View>

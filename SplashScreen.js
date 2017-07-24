@@ -1,5 +1,5 @@
 'use strict';
-
+//过渡界面
 var React = require('react-native');
 var {
   AsyncStorage,

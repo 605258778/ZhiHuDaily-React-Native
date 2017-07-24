@@ -1,5 +1,5 @@
 'use strict';
-
+//文章列表组件
 var React = require('react-native');
 var {
   AsyncStorage,

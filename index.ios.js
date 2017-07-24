@@ -3,7 +3,7 @@
  * https://github.com/facebook/react-native
  */
 'use strict';
-
+//ios应用的入口
 var React = require('react-native');
 var {
   AppRegistry,

@@ -1,5 +1,5 @@
 'use strict';
-
+//界面的标题栏组件
 var React = require('react-native');
 var {
   AppRegistry,

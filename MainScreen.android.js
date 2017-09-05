@@ -30,7 +30,7 @@ var toolbarActions = [
 
 var MainScreen = React.createClass({
   getInitialState: function() {
-    return ({DetailToolbar
+    return ({
       theme: null,
     });
   },

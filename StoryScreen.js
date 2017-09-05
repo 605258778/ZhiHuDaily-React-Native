@@ -83,7 +83,7 @@ var StoryScreen = React.createClass({
         var translateY = this.state.scrollValue.interpolate({
           inputRange: [0, HEADER_SIZE, HEADER_SIZE + 1], outputRange: [0, HEADER_SIZE, HEADER_SIZE]
         });
-        var html = '<!DOCTYPE html><html><head><title>这是标题哦</title></head><body>' + this.state.detail.body
+        var html = '<!DOCTYPE html><html><head></head><body>' + this.state.detail.body
           + '</body></html>';
         return (
           <View style={styles.container}>

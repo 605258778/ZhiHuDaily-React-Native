@@ -14,6 +14,7 @@ var {
 } = React
 
 var StoryItem = require('./StoryItem');
+var Login = require('./Login');
 var ThemesList = require('./ThemesList');
 var DataRepository = require('./DataRepository');
 var ViewPager = require('react-native-viewpager');

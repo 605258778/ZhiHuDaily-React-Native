@@ -5,7 +5,7 @@ var React = require('react-native');
 var {
   AsyncStorage,
 } = React;
-var hostIp = "http://192.168.1.103:8080/ggxxpt/";//API调用端口
+var hostIp = "http://192.168.1.111:8080/ggxxpt/";//API调用端口
 var API_COVER_URL = "http://news-at.zhihu.com/api/4/start-image/1080*1776";
 var API_LATEST_URL1 = 'http://news-at.zhihu.com/api/4/news/latest';
 var API_LATEST_URL = hostIp+'api/action/rollpicture?version=1.0.1&apiUser=admin&checkSum=YBrs&siteId=2';

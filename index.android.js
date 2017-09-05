@@ -24,7 +24,7 @@ var TimerMixin = require('react-timer-mixin');
 var SplashScreen = require('./SplashScreen');
 var MainScreen = require('./MainScreen');
 var StoryScreen = require('./StoryScreen');
-
+var Login = require('./Login');
 var _navigator;
 BackAndroid.addEventListener('hardwareBackPress', function() {
   if (_navigator && _navigator.getCurrentRoutes().length > 1) {
